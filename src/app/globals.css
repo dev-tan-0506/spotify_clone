@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+.MuiSlider-track {
+  background-color: #fff;
+}
+
+.MuiSlider-root	 {
+  height: 4px;
+}
+
+.MuiSlider-root:hover .MuiSlider-thumb	 {
+  display: block;
+}
+
+
+.MuiSlider-thumb {
+  background-color: #fff;
+  display: none;
+}
+
+.MuiSlider-root:hover .MuiSlider-track	 {
+  background-color: #1DB954;
+}
+
+.MuiSlider-rail {
+  background-color: #B3B3B3;
+}
