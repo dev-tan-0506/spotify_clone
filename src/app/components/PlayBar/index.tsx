@@ -2,18 +2,10 @@
 "use client";
 
 import { Slider } from "@mui/material";
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-
-interface Song {
-  id: number;
-  name: string;
-  singer: string;
-  likedSong: boolean;
-  img: string;
-  link: string;
-  durationSong: number;
-}
+import useFetchAPI from "../../utils/fetchApi";
+import { Song } from "@/app/interfaces/Song";
+import SongPlaying from "./SongPlaying";
 
 export default function PlayBar() {
   const musicEl = useRef<any>(null);
@@ -21,7 +13,9 @@ export default function PlayBar() {
   const [playlistPlaying, setPlaylistPlaying] = useState<Song[]>([]);
   const [timePlayingSong, setTimePlayingSong] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [isShuffle, setIsShuffle] = useState<boolean>(false);
   const [indexSongPlaying, setIndexSongPlaying] = useState<number>(0);
+  const [getAPI] = useFetchAPI();
 
   const _startProgressPlayingSong = () => {
     intervalPlaySong.current = setInterval(() => {
@@ -34,10 +28,11 @@ export default function PlayBar() {
   };
 
   const handlePlaySong = (index?: number) => {
-    if (index) {
+    if (index || index === 0) {
       setIndexSongPlaying(index);
       musicEl.current.src = playlistPlaying[index].link;
       musicEl.current.load();
+      handleResetPlayingSong();
     }
 
     setIsPlaying(true);
@@ -60,7 +55,7 @@ export default function PlayBar() {
   };
 
   const backSong = () => {
-    if (!indexSongPlaying) {
+    if (indexSongPlaying === 0) {
       return;
     }
     handlePlaySong(indexSongPlaying - 1);
@@ -85,18 +80,30 @@ export default function PlayBar() {
 
   const displayTimeSong = (seconds: number) => {
     if (!seconds) {
-      return "-:--";
+      return "0:00";
     }
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds}`;
   }
 
+  const getPlaylist = async () => {
+    const url = `http://localhost:3001/songs`;
+    const songs: Song[] = await getAPI(url);
+    if (songs) {
+      setPlaylistPlaying(songs);
+    }
+  }
+
+  const handleResetPlayingSong = () => {
+    handlePauseSong();
+    setTimePlayingSong(0);
+  }
+
   useEffect(() => {
     const totalTimeSongPlaying = playlistPlaying[indexSongPlaying]?.durationSong || 0;
     if (timePlayingSong === totalTimeSongPlaying) {
-      handlePauseSong();
-      setTimePlayingSong(0);
+      handleResetPlayingSong();
 
       if (indexSongPlaying + 1 <= playlistPlaying.length - 1) {
         nextSong();
@@ -105,43 +112,21 @@ export default function PlayBar() {
   }, [timePlayingSong]);
 
   useEffect(() => {
-
+    getPlaylist();
   }, [])
 
   return (
     <div className="w-full fixed bottom-0 bg-[#000000] px-[19.5px] py-[20px]">
       <div className="flex justify-between w-full">
-        <div className={`flex gap-[8px] items-center ${!playlistPlaying[indexSongPlaying] && 'invisible'}`}>
-          <Image
-            className="cursor-pointer"
-            src={playlistPlaying[indexSongPlaying]?.img}
-            width={48}
-            height={48}
-            alt={playlistPlaying[indexSongPlaying]?.name}
-          />
-          <div className="flex flex-col max-w-[100px] min-w-[100px] overflow-hidden">
-            <div className="cursor-pointer text-white text-[14px]">
-              {playlistPlaying[indexSongPlaying]?.name}
-            </div>
-            <div className="cursor-pointer text-[#B2B2B2] text-[12px]">
-              {playlistPlaying[indexSongPlaying]?.singer}
-            </div>
-          </div>
-          <ul className="flex gap-[8px] text-[#B2B2B2] text-[16px]">
-            <i
-              className={`fa-solid fa-heart hover:text-[#1DB954] cursor-pointer ${playlistPlaying[indexSongPlaying]?.likedSong &&
-                "text-[#1DB954]"
-                }`}
-            ></i>
-            <i className="fa-solid fa-circle-plus hover:text-[#1DB954] cursor-pointer"></i>
-            <i className="fa-solid fa-list hover:text-[#1DB954] cursor-pointer"></i>
-          </ul>
-        </div>
+        <SongPlaying songPlaying={playlistPlaying[indexSongPlaying]}></SongPlaying>
         <div className="max-w-[560px] w-full flex flex-col gap-[2px] justify-center">
           <ul className="text-[#B2B2B2] flex gap-[13px] text-[16px] items-center self-center">
-            <i className={`fa-solid fa-shuffle hover:text-[#1DB954] ${!playlistPlaying.length ?
-              "text-[#363636] cursor-not-allowed hover:text-[#363636]" : "cursor-pointer"
-              }`}></i>
+            <div className={`flex item-center relative
+              ${isShuffle && "before:content-[''] before:w-[4px] before:h-[4px] before:bg-[#1DB954] before:rounded-full before:absolute before:top-[20px] before:left-[50%] before:translate-x-[-50%]"}`}>
+              <i className={`fa-solid fa-shuffle hover:text-[#1DB954] relative ${!playlistPlaying.length ?
+                "text-[#363636] cursor-not-allowed hover:text-[#363636]" : "cursor-pointer"
+                } ${isShuffle && 'text-[#1DB954]'}`}></i>
+            </div>
             <i
               className={`fa-solid fa-backward-step hover:text-[#1DB954] ${!indexSongPlaying || !playlistPlaying.length ?
                 "text-[#363636] cursor-not-allowed hover:text-[#363636]" : "cursor-pointer"
