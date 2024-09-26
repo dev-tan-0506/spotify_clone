@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { Song } from "@/app/interfaces/Song";
 
 interface SongPlayingProps {

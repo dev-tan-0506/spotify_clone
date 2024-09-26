@@ -48,7 +48,7 @@ export default function LeftNav() {
   };
 
   return (
-    <div className="w-[18%] bg-[#000] h-[90.5%] fixed text-white	p-[32px] text-[14px]">
+    <div className="w-[18%] bg-[#000] h-full text-white	p-[32px] text-[14px]">
       <div className="flex items-center justify-between mb-[40px]">
         <Image
           style={{ width: "148px", height: "45px" }}

@@ -4,6 +4,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import LeftNav from "./components/LeftNav";
 import PlayBar from "./components/PlayBar";
+import RightNav from "./components/RightNav";
+import StoreProvider from "./StoreProviders";
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -35,9 +37,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <LeftNav></LeftNav>
-        {children}
-        <PlayBar></PlayBar>
+        <StoreProvider>
+          <div className="flex h-[90.5%]">
+            <LeftNav></LeftNav>
+            <div className="flex-1">{children}</div>
+            <RightNav></RightNav>
+          </div>
+          <PlayBar></PlayBar>
+        </StoreProvider>
       </body>
     </html>
   );
