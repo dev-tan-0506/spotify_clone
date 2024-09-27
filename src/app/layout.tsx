@@ -6,6 +6,7 @@ import LeftNav from "./components/LeftNav";
 import PlayBar from "./components/PlayBar";
 import RightNav from "./components/RightNav";
 import StoreProvider from "./StoreProviders";
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",

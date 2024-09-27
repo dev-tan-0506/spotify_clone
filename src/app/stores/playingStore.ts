@@ -10,6 +10,8 @@ export interface PlayingStore {
   playingSong: number;
   isPlaying: boolean;
   isShuffle: boolean;
+  isShowPlaylistPlayingBar: boolean;
+  isShowSongPlayingDetailBar: boolean;
 }
 
 // Define the initial state using that type
@@ -20,6 +22,8 @@ const playingStates: PlayingStore = {
   isLoading: false,
   isPlaying: false,
   isShuffle: false,
+  isShowPlaylistPlayingBar: false,
+  isShowSongPlayingDetailBar: false,
 };
 
 export const getPlaylist = createAsyncThunk("playing/getPlaylist", async () => {
@@ -43,6 +47,9 @@ export const playingStore = createSlice({
   reducers: {
     changePlayingSong: (state, { payload }: PayloadAction<number>) => {
       state.playingSong = payload;
+      if (!state.isPlaying) {
+        state.isPlaying = true;
+      }
     },
     setIsPlaying: (state, { payload }: PayloadAction<boolean>) => {
       state.isPlaying = payload;
@@ -52,6 +59,24 @@ export const playingStore = createSlice({
     },
     setPlaylist: (state, { payload }: PayloadAction<Song[]>) => {
       state.playlist = payload;
+    },
+    setIsShowPlaylistPlayingBar: (
+      state,
+      { payload }: PayloadAction<boolean>
+    ) => {
+      state.isShowPlaylistPlayingBar = payload;
+      if (payload) {
+        state.isShowSongPlayingDetailBar = !payload;
+      }
+    },
+    setIsShowSongPlayingDetailBar: (
+      state,
+      { payload }: PayloadAction<boolean>
+    ) => {
+      state.isShowSongPlayingDetailBar = payload;
+      if (payload) {
+        state.isShowPlaylistPlayingBar = !payload;
+      }
     },
     handleShufflePlaylist: (state) => {
       state.playlistShuffled = state.isShuffle
@@ -82,32 +107,6 @@ export const playingStore = createSlice({
 });
 
 export const selectPlayingState = (state: RootState) => state.playing;
-export const selectIndexSongPlaying = (state: RootState) =>
-  state.playing.playingSong;
-export const selectIsPlaying = (state: RootState) => state.playing.isPlaying;
-export const selectIsShuffle = (state: RootState) => state.playing.isShuffle;
-export const selectSongPlaying = (state: RootState) => {
-  const index = state.playing.playingSong;
-  const playlist = state.playing.playlistShuffled;
-  return playlist[index] || {};
-};
-export const selectNextSongs = (state: RootState) => {
-  const indexSongPlaying = state.playing.playingSong;
-  const playlist = state.playing.playlistShuffled;
-  return playlist.filter((song, index) => index > indexSongPlaying);
-};
-export const getIsNextSong = (state: RootState) => {
-  const indexSongPlaying = state.playing.playingSong;
-  const playlist = state.playing.playlistShuffled;
-  return !!playlist[indexSongPlaying + 1];
-};
-export const getIsPrevSong = (state: RootState) => {
-  const indexSongPlaying = state.playing.playingSong;
-  const playlist = state.playing.playlistShuffled;
-  return !!playlist[indexSongPlaying - 1];
-};
-export const selectPlaylist = (state: RootState) =>
-  state.playing.playlistShuffled;
 
 export const {
   changePlayingSong,
@@ -115,6 +114,8 @@ export const {
   toggleShuffle,
   setPlaylist,
   handleShufflePlaylist,
+  setIsShowPlaylistPlayingBar,
+  setIsShowSongPlayingDetailBar,
 } = playingStore.actions;
 
 export default playingStore.reducer;

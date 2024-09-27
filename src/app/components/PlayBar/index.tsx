@@ -2,32 +2,46 @@
 "use client";
 
 import { Slider } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import SongPlaying from "./SongPlaying";
 import { useAppDispatch, useAppSelector } from "@/app/stores/hooks";
 import {
-  selectSongPlaying,
-  selectPlaylist,
-  selectIsPlaying,
   changePlayingSong,
   setIsPlaying,
-  getIsNextSong,
-  getIsPrevSong,
-  selectIndexSongPlaying,
-  selectIsShuffle,
   toggleShuffle,
   handleShufflePlaylist,
+  selectPlayingState,
+  setIsShowPlaylistPlayingBar,
+  setIsShowSongPlayingDetailBar,
+  getPlaylist,
 } from "@/app/stores/playingStore";
 import { Song } from "@/app/interfaces/Song";
 
 export default function PlayBar() {
-  const songPlaying: Song = useAppSelector(selectSongPlaying);
-  const playlistPlaying: Song[] = useAppSelector(selectPlaylist);
-  const isPlaying: boolean = useAppSelector(selectIsPlaying);
-  const isShuffle: boolean = useAppSelector(selectIsShuffle);
-  const indexCurrentSong: number = useAppSelector(selectIndexSongPlaying);
-  const isNextSong: boolean = useAppSelector(getIsNextSong);
-  const isPrevSong: boolean = useAppSelector(getIsPrevSong);
+  const {
+    playlistShuffled: playlist,
+    playingSong: indexCurrentSong,
+    isPlaying,
+    isShuffle,
+    isShowPlaylistPlayingBar,
+    isShowSongPlayingDetailBar,
+  } = useAppSelector(selectPlayingState);
+
+  const songPlaying: Song = useMemo(
+    () => playlist[indexCurrentSong] || null,
+    [playlist, indexCurrentSong]
+  );
+
+  const isNextSong: boolean = useMemo(
+    () => !!playlist[indexCurrentSong + 1],
+    [playlist, indexCurrentSong]
+  );
+
+  const isPrevSong: boolean = useMemo(
+    () => !!playlist[indexCurrentSong - 1],
+    [playlist, indexCurrentSong]
+  );
+
   const dispatch = useAppDispatch();
   const musicEl = useRef<any>(null);
   const intervalPlaySong = useRef<any>(null);
@@ -43,22 +57,23 @@ export default function PlayBar() {
     }, 1000);
   };
 
-  const handlePlaySong = (index?: number) => {
-    if (index || index === 0) {
-      dispatch(changePlayingSong(index));
-      musicEl.current.src = playlistPlaying[index].link;
-      musicEl.current.load();
-      handleResetPlayingSong();
-    }
-    dispatch(setIsPlaying(true));
+  const handlePlaySong = () => {
+    resetIntervalPlaySong();
     musicEl.current.play();
+    if (!isPlaying) {
+      dispatch(setIsPlaying(true));
+    }
     _startProgressPlayingSong();
+  };
+
+  const resetIntervalPlaySong = () => {
+    clearInterval(intervalPlaySong.current);
+    intervalPlaySong.current = null;
   };
 
   const handlePauseSong = () => {
     dispatch(setIsPlaying(false));
-    clearInterval(intervalPlaySong.current);
-    intervalPlaySong.current = null;
+    resetIntervalPlaySong();
     musicEl.current.pause();
   };
 
@@ -66,14 +81,14 @@ export default function PlayBar() {
     if (!isNextSong) {
       return;
     }
-    handlePlaySong(indexCurrentSong + 1);
+    dispatch(changePlayingSong(indexCurrentSong + 1));
   };
 
   const backSong = () => {
     if (!isPrevSong) {
       return;
     }
-    handlePlaySong(indexCurrentSong - 1);
+    dispatch(changePlayingSong(indexCurrentSong - 1));
   };
 
   const playSongWithTime = (time: number) => {
@@ -84,9 +99,7 @@ export default function PlayBar() {
   };
 
   const playSong = () => {
-    const newIsPlaying = !isPlaying;
-    dispatch(setIsPlaying(newIsPlaying));
-    if (newIsPlaying) {
+    if (!isPlaying) {
       handlePlaySong();
     } else {
       handlePauseSong();
@@ -108,15 +121,19 @@ export default function PlayBar() {
     }`;
   };
 
-  const handleResetPlayingSong = () => {
-    handlePauseSong();
-    setTimePlayingSong(0);
+  const handleEnableSongPlayingDetailBar = () => {
+    dispatch(setIsShowSongPlayingDetailBar(!isShowSongPlayingDetailBar));
+  };
+
+  const handleEnablePlaylistPlayingBar = () => {
+    dispatch(setIsShowPlaylistPlayingBar(!isShowPlaylistPlayingBar));
   };
 
   useEffect(() => {
     const totalTimeSongPlaying = songPlaying?.durationSong || 0;
     if (timePlayingSong === totalTimeSongPlaying) {
-      handleResetPlayingSong();
+      handlePauseSong();
+      setTimePlayingSong(0);
 
       if (isNextSong) {
         nextSong();
@@ -127,6 +144,27 @@ export default function PlayBar() {
   useEffect(() => {
     dispatch(handleShufflePlaylist());
   }, [isShuffle]);
+
+  useEffect(() => {
+    musicEl.current.src = songPlaying?.link || "";
+    musicEl.current.load();
+    if (isPlaying) {
+      setTimePlayingSong(0);
+      handlePlaySong();
+    }
+  }, [songPlaying]);
+
+  useEffect(() => {
+    if (isPlaying) {
+      handlePlaySong();
+    } else {
+      handlePauseSong();
+    }
+  }, [isPlaying]);
+
+  useEffect(() => {
+    dispatch(getPlaylist());
+  }, [dispatch]);
 
   return (
     <div className="w-full fixed bottom-0 bg-[#000000] px-[19.5px] py-[20px]">
@@ -144,7 +182,7 @@ export default function PlayBar() {
             >
               <i
                 className={`fa-solid fa-shuffle hover:text-[#1DB954] relative ${
-                  !playlistPlaying.length
+                  !playlist.length
                     ? "text-[#363636] cursor-not-allowed hover:text-[#363636]"
                     : "cursor-pointer"
                 } ${isShuffle && "text-[#1DB954]"}`}
@@ -152,7 +190,7 @@ export default function PlayBar() {
             </div>
             <i
               className={`fa-solid fa-backward-step hover:text-[#1DB954] ${
-                !isPrevSong || !playlistPlaying.length
+                !isPrevSong || !playlist.length
                   ? "text-[#363636] cursor-not-allowed hover:text-[#363636]"
                   : "cursor-pointer"
               }`}
@@ -163,7 +201,7 @@ export default function PlayBar() {
                 className={`fa-solid fa-circle-${
                   isPlaying ? "pause" : "play"
                 }  text-[28px] ${
-                  !playlistPlaying.length
+                  !playlist.length
                     ? "text-[#363636] cursor-not-allowed"
                     : "cursor-pointer text-white"
                 }`}
@@ -171,7 +209,7 @@ export default function PlayBar() {
             </div>
             <i
               className={`fa-solid fa-forward-step hover:text-[#1DB954] ${
-                !isNextSong || !playlistPlaying.length
+                !isNextSong || !playlist.length
                   ? "text-[#363636] cursor-not-allowed hover:text-[#363636]"
                   : "cursor-pointer"
               }`}
@@ -179,7 +217,7 @@ export default function PlayBar() {
             ></i>
             <i
               className={`fa-solid fa-repeat hover:text-[#1DB954] ${
-                !playlistPlaying.length
+                !playlist.length
                   ? "text-[#363636] cursor-not-allowed hover:text-[#363636]"
                   : "cursor-pointer"
               }`}
@@ -187,9 +225,7 @@ export default function PlayBar() {
           </ul>
           <div className="text-[#B3B3B3] flex gap-[8px] text-[12px] items-center">
             <div className="text-nowrap">
-              {playlistPlaying.length
-                ? displayTimeSong(timePlayingSong)
-                : "-:--"}
+              {playlist.length ? displayTimeSong(timePlayingSong) : "-:--"}
             </div>
             <Slider
               value={timePlayingSong}
@@ -200,7 +236,7 @@ export default function PlayBar() {
               onChange={(_, value) => playSongWithTime(value as number)}
             />
             <div className="text-nowrap">
-              {playlistPlaying.length
+              {playlist.length
                 ? displayTimeSong(songPlaying?.durationSong)
                 : "-:--"}
             </div>
@@ -211,10 +247,20 @@ export default function PlayBar() {
             <source src={songPlaying?.link} type="audio/mpeg" />
           </audio>
           <ul className="flex gap-[8px]">
-            <li className="cursor-pointer hover:text-[#1DB954]">
+            <li
+              className={`cursor-pointer hover:text-[#1DB954] ${
+                isShowSongPlayingDetailBar && "text-[#1DB954]"
+              }`}
+              onClick={handleEnableSongPlayingDetailBar}
+            >
               <i className="fa-regular fa-address-card"></i>
             </li>
-            <li className="cursor-pointer hover:text-[#1DB954]">
+            <li
+              className={`cursor-pointer hover:text-[#1DB954] ${
+                isShowPlaylistPlayingBar && "text-[#1DB954]"
+              }`}
+              onClick={handleEnablePlaylistPlayingBar}
+            >
               <i className="fa-regular fa-list"></i>
             </li>
           </ul>
