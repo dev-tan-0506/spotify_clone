@@ -39,7 +39,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <StoreProvider>
-          <div className="flex h-[90.5%]">
+          <div className="flex h-[90vh]">
             <LeftNav></LeftNav>
             <div className="flex-1">{children}</div>
             <RightNav></RightNav>

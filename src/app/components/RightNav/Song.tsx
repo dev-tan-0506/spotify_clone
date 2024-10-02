@@ -42,7 +42,7 @@ export default function SongRightNav({
           <i className="icon-on-thumb fa-solid fa-play fa-lg absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]"></i>
         )}
 
-        <img src={song.img} className="w-full h-full" alt="" />
+        <img src={song.thumb} className="w-full h-full rounded-[5px]" alt="" />
       </div>
       <div>
         <div className={isNowPlaying ? 'text-[#1DB954]' : 'text-white'}>{song.name}</div>

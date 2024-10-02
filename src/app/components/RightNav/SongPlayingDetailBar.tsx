@@ -22,7 +22,7 @@ export default function SongPlayingDetailBar() {
         </ul>
       </div>
       <div className="max-h-[93%] h-full overflow-y-scroll" style={{ scrollbarWidth: 'none' }}>
-        <img src={songPlaying.img} alt="" className="w-full aspect-square rounded-[10px] mb-[15px]" />
+        <img src={songPlaying.thumb} alt="" className="w-full aspect-square rounded-[10px] mb-[15px]" />
         <div className="flex items-center justify-between mb-[15px]">
           <div className="w-[80%] overflow-hidden text-nowrap">
             <div className="text-[25px] font-bold">{songPlaying.name}</div>
@@ -36,7 +36,7 @@ export default function SongPlayingDetailBar() {
         <div>
           <div className="rounded-t-[10px] overflow-hidden relative cursor-pointer">
             <div className="font-bold absolute top-[8%] left-[5%]">Giới thiệu về nghệ sĩ</div>
-            <img src={songPlaying.img} alt="" className="w-full aspect-[4/3] object-cover" />
+            <img src={songPlaying.thumb} alt="" className="w-full aspect-[4/3] object-cover" />
           </div>
           <div className="p-[15px] bg-[#1F1F1F] flex items-center justify-between gap-[10px] rounded-b-[10px]">
             <div className="flex flex-col gap-[8px] cursor-pointer">

@@ -27,7 +27,7 @@ const playingStates: PlayingStore = {
 };
 
 export const getPlaylist = createAsyncThunk("playing/getPlaylist", async () => {
-  const url = `http://localhost:3001/songs`;
+  const url = `http://localhost:3000/songs`;
   const songs: Song[] = await getAPI(url);
   if (songs) {
     return songs;

@@ -9,8 +9,8 @@ export default function SongPlaying({ songPlaying }: SongPlayingProps) {
     return (
         <div className={`flex gap-[8px] items-center ${!songPlaying && 'invisible'}`}>
             <img
-                className="cursor-pointer"
-                src={songPlaying?.img}
+                className="cursor-pointer rounded-[5px]"
+                src={songPlaying?.thumb}
                 style={{ width: "48px", aspectRatio: "1" }}
                 alt={songPlaying?.name}
             />

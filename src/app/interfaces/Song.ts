@@ -3,7 +3,7 @@ export interface Song {
     name: string;
     singer: string;
     likedSong: boolean;
-    img: string;
-    link: string;
+    thumb: string;
+    link_song: string;
     durationSong: number;
 }

@@ -146,7 +146,7 @@ export default function PlayBar() {
   }, [isShuffle]);
 
   useEffect(() => {
-    musicEl.current.src = songPlaying?.link || "";
+    musicEl.current.src = songPlaying?.link_song || "";
     musicEl.current.load();
     if (isPlaying) {
       setTimePlayingSong(0);
@@ -244,7 +244,7 @@ export default function PlayBar() {
         </div>
         <div className="text-[#B3B3B3] text-[12px] flex gap-[32px] items-center">
           <audio controls ref={musicEl} className="hidden">
-            <source src={songPlaying?.link} type="audio/mpeg" />
+            <source src={songPlaying?.link_song} type="audio/mpeg" />
           </audio>
           <ul className="flex gap-[8px]">
             <li
