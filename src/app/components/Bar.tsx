@@ -3,5 +3,5 @@ interface BarProps {
 }
 
 export default function Bar({ children }: BarProps) {
-  return <div className="bg-[#000] text-white p-[8px] w-[23%]">{children}</div>;
+  return <div className="bar">{children}</div>;
 }

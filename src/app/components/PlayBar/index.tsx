@@ -167,7 +167,7 @@ export default function PlayBar() {
   }, [dispatch]);
 
   return (
-    <div className="w-full fixed bottom-0 bg-[#000000] px-[19.5px] py-[20px]">
+    <div className="w-full h-full bottom-0 bg-[#000000] px-[19.5px] py-[20px]">
       <div className="flex justify-between w-full">
         <SongPlaying songPlaying={songPlaying}></SongPlaying>
         <div className="max-w-[560px] w-full flex flex-col gap-[2px] justify-center">

@@ -2,10 +2,10 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import LeftNav from "./components/LeftNav";
-import PlayBar from "./components/PlayBar";
-import RightNav from "./components/RightNav";
 import StoreProvider from "./StoreProviders";
+import "./scss/main.scss";
+import { SessionProvider } from "next-auth/react";
+import MainContent from "./MainContent";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -38,14 +38,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <StoreProvider>
-          <div className="flex h-[90vh]">
-            <LeftNav></LeftNav>
-            <div className="flex-1">{children}</div>
-            <RightNav></RightNav>
-          </div>
-          <PlayBar></PlayBar>
-        </StoreProvider>
+        <SessionProvider>
+          <StoreProvider>
+            <MainContent>{children}</MainContent>
+          </StoreProvider>
+        </SessionProvider>
       </body>
     </html>
   );
