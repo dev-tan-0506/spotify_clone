@@ -25,7 +25,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="p-[20px]">
+    <div className="home-main-content">
       <div>
         {/* <h2 className="font-bold text-[20px] mb-[15px]">Danh sách nghệ sĩ</h2> */}
         {/* <ul>

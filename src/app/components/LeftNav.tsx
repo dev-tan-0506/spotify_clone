@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-import logo from "@/app/assets/images/logo.png";
 import { useState } from "react";
 import MyPlaylists from "./MyPlaylists";
 import Link from "next/link";
@@ -48,15 +46,7 @@ export default function LeftNav() {
   };
 
   return (
-    <div className="w-[18%] bg-[#000] h-full text-white	p-[32px] text-[14px]">
-      <div className="flex items-center justify-between mb-[40px]">
-        <Image
-          style={{ width: "148px", height: "45px" }}
-          src={logo}
-          alt="Spotify"
-        />
-        <i className="fa-solid fa-angles-left"></i>
-      </div>
+    <div className="w-[18%] h-[78%] bg-[#212121] h-full text-white	p-[32px] text-[14px] rounded-[10px]">
       <ul className="flex flex-col gap-[16px]">
         {menuNavbar.map((item, key) => (
           <li

@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import MainModal from "./MainModal";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import logo from "@/app/assets/images/logo.png";
+import { Button } from "@mui/material";
 
 const style = {
   position: "absolute",
@@ -19,16 +20,9 @@ const style = {
   p: 4,
 };
 
-interface LoginModalProps {
-  userLoggedIn: any;
-}
-
-export default function LoginModal({ userLoggedIn }: LoginModalProps) {
-  const [open, setOpen] = useState<boolean>(true);
-  const handleClose = (event: any, reason: any) => {
-    if (reason && reason === "backdropClick") {
-      return;
-    }
+export default function LoginModal() {
+  const [open, setOpen] = useState<boolean>(false);
+  const handleClose = () => {
     const appEl = document.getElementById("app");
     if (appEl) {
       appEl.style.filter = "blur(0)";
@@ -36,34 +30,52 @@ export default function LoginModal({ userLoggedIn }: LoginModalProps) {
     setOpen(false);
   };
 
+  const openLoginModal = () => {
+    setOpen(true);
+  };
+
   return (
-    <MainModal
-      modalId="addSingerModal"
-      open={open}
-      onClose={handleClose}
-      style={style}
-    >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
+    <>
+      <Button
+        variant="contained"
+        sx={{
+          bgcolor: "#fff",
+          color: "#000",
+          fontWeight: "bold",
+          textTransform: "capitalize",
         }}
+        onClick={openLoginModal}
       >
-        <Image
-          style={{ width: "148px", height: "45px", marginBottom: "40px" }}
-          src={logo}
-          alt="Spotify"
-        />
-        <p className="font-bold text-[30px]">Milions of songs.</p>
-        <p className="font-bold text-[30px]">Free on Spotify.</p>
-        <button
-          className="mt-5 mb-5 rounded-full bg-[#1DB954] p-3 px-10 font-bold text-[20px]"
-          onClick={() => signIn("google")}
+        Log in
+      </Button>
+      <MainModal
+        modalId="addSingerModal"
+        open={open}
+        onClose={handleClose}
+        style={style}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
         >
-          Login
-        </button>
-      </div>
-    </MainModal>
+          <Image
+            style={{ width: "148px", height: "45px", marginBottom: "40px" }}
+            src={logo}
+            alt="Spotify"
+          />
+          <p className="font-bold text-[30px]">Milions of songs.</p>
+          <p className="font-bold text-[30px]">Free on Spotify.</p>
+          <button
+            className="mt-5 mb-5 rounded-full bg-[#1DB954] p-3 px-10 font-bold text-[20px]"
+            onClick={() => signIn("google")}
+          >
+            Login
+          </button>
+        </div>
+      </MainModal>
+    </>
   );
 }
