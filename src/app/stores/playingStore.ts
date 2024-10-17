@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from ".";
 import { Song } from "../interfaces/Song";
-import { getAPI } from "../utils/fetchApi";
+import useAPI from "../utils/fetchApi";
 
 export interface PlayingStore {
   playlist: Song[];
@@ -27,8 +27,8 @@ const playingStates: PlayingStore = {
 };
 
 export const getPlaylist = createAsyncThunk("playing/getPlaylist", async () => {
-  const url = `http://localhost:3000/songs`;
-  const songs: Song[] = await getAPI(url);
+  const url = `songs`;
+  const songs: Song[] = await useAPI.get(url);
   if (songs) {
     return songs;
   }

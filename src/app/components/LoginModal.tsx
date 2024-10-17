@@ -34,6 +34,8 @@ export default function LoginModal() {
     setOpen(true);
   };
 
+  const handleSignIn = () => signIn("google");
+
   return (
     <>
       <Button
@@ -70,7 +72,7 @@ export default function LoginModal() {
           <p className="font-bold text-[30px]">Free on Spotify.</p>
           <button
             className="mt-5 mb-5 rounded-full bg-[#1DB954] p-3 px-10 font-bold text-[20px]"
-            onClick={() => signIn("google")}
+            onClick={handleSignIn}
           >
             Login
           </button>

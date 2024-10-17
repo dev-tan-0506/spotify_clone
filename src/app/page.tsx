@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getAPI } from "./utils/fetchApi";
+import useAPI from "./utils/fetchApi";
 import { Singer } from "./interfaces/Singer";
 // import AddSingerModal from "./components/AddSingerModal";
 
@@ -9,8 +9,8 @@ export default function Home() {
   const [singers, setSingers] = useState<Singer[]>([]);
 
   const getListSingers = async () => {
-    const url = "http://localhost:3000/singers";
-    const response = await getAPI(url);
+    const url = "singers";
+    const response = await useAPI.get(url);
     if (response) {
       setSingers(response);
     }

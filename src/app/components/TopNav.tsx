@@ -3,7 +3,6 @@
 import Image from "next/image";
 import logo from "@/app/assets/images/logo.png";
 import LoginModal from "./LoginModal";
-import { useSession } from "next-auth/react";
 import AvatarByName from "./AvatarByName";
 import Popper from "@mui/material/Popper";
 import { useEffect, useRef, useState } from "react";
@@ -13,6 +12,7 @@ import ClickAwayListener from "@mui/material/ClickAwayListener";
 import MenuList from "@mui/material/MenuList";
 import MenuItem from "@mui/material/MenuItem";
 import { signOut } from "next-auth/react";
+import { UserLoginGoogleInfo } from "../interfaces/User";
 
 const menu = [
   {
@@ -33,8 +33,11 @@ const menu = [
   },
 ];
 
-export default function TopNav() {
-  const { data: session } = useSession();
+interface TopNavProps {
+  userLogin: UserLoginGoogleInfo;
+}
+
+export default function TopNav({ userLogin }: TopNavProps) {
   const [openMenuUser, setOpenMenuUser] = useState<boolean>(false);
   const anchorRef = useRef<HTMLButtonElement>(null);
 
@@ -54,6 +57,7 @@ export default function TopNav() {
     event: Event | React.SyntheticEvent
   ) => {
     if (nameMenu === "logout") {
+      localStorage.removeItem("isAuhWithBE");
       signOut();
     }
     handleClose(event);
@@ -68,18 +72,19 @@ export default function TopNav() {
     }
   }
   const handleToggle = () => {
-    console.log("hahaha");
     setOpenMenuUser((prevOpen) => !prevOpen);
   };
-  // return focus to the button when we transitioned from !open -> open
+
   const prevOpen = useRef(open);
   useEffect(() => {
-    if (prevOpen.current === true && open === false) {
+    const prevOpenCurr = prevOpen?.current;
+    if (!!prevOpenCurr && !open) {
       anchorRef.current!.focus();
     }
 
     prevOpen.current = open;
   }, [open]);
+
   return (
     <div className="topNav">
       <Image
@@ -87,13 +92,13 @@ export default function TopNav() {
         src={logo}
         alt="Spotify"
       />
-      {!session?.user ? (
+      {!userLogin ? (
         <LoginModal></LoginModal>
       ) : (
         <div className="userLoggedIn">
           <AvatarByName
             ref={anchorRef}
-            name={session?.user?.name || ""}
+            name={userLogin.name || ""}
             size="30px"
             fontSize="14px"
             onClick={handleToggle}
