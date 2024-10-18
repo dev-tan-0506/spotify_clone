@@ -9,44 +9,21 @@ import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import Image from "next/image";
 import logo from "@/app/assets/images/logo.png";
-import { useSession } from "next-auth/react";
-import { UserLoginGoogleInfo } from "./interfaces/User";
-import useAPI from "./utils/fetchApi";
+import { useAppSelector } from "./stores/hooks";
+import { selectIsAuthencating } from "./stores/auth";
 
 interface HomeProps {
   children: ReactNode;
 }
 
 export default function MainContent({ children }: HomeProps) {
-  const { data: session, status } = useSession();
-  const isAuthWithBEOnLocalStorage = localStorage?.getItem("isAuhWithBE");
-  const [isAuthWithBE, setIsAuthWithBE] = useState<boolean>(
-    isAuthWithBEOnLocalStorage ? JSON.parse(isAuthWithBEOnLocalStorage) : false
-  );
+  const { isAuthencating } = useAppSelector(selectIsAuthencating);
   const [openLoading, setOpenLoading] = useState<boolean>(true);
 
-  const handleLoginWithBE = async (data?: UserLoginGoogleInfo) => {
-    if (!data) {
-      return;
-    }
-
-    const url = "auth/login-google";
-    const response = await useAPI.post(url, data);
-    if (response) {
-    }
-    localStorage.setItem("isAuhWithBE", "true");
-    setIsAuthWithBE(true);
-  };
-
   useEffect(() => {
-    if (status === "loading") {
-      setOpenLoading(true);
-    } else if (session?.user && !isAuthWithBE) {
-      handleLoginWithBE(session?.user as UserLoginGoogleInfo);
-    } else {
-      setOpenLoading(false);
-    }
-  }, [status, isAuthWithBE]);
+    setOpenLoading(isAuthencating);
+  }, [isAuthencating]);
+
   return (
     <>
       <Backdrop
@@ -62,10 +39,10 @@ export default function MainContent({ children }: HomeProps) {
       </Backdrop>
       {!openLoading && (
         <div className="layout-default" id="app">
-          <TopNav userLogin={session?.user as UserLoginGoogleInfo}></TopNav>
+          <TopNav></TopNav>
           <div className="main-app">
             <LeftNav></LeftNav>
-            <div className="main-content">{children}</div>
+            <div className="main-content" id="main-content">{children}</div>
             <RightNav></RightNav>
           </div>
           <div className="playbar">

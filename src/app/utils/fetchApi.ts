@@ -1,9 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import Cookies from "js-cookie";
+const access_token =
+  Cookies.get("access_token") && `Bearer ${Cookies.get("access_token")}`;
+
 const BaseUrl = "http://localhost:3002";
 const useAPI = {
   get: async (url: string) => {
     try {
-      const response = await fetch(`${BaseUrl}/${url}`);
+      const response = await fetch(`${BaseUrl}/${url}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: access_token || "",
+        },
+      });
       if (!response.ok) {
         console.error("Response status: " + response.status);
         return null;
@@ -21,6 +31,7 @@ const useAPI = {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          authorization: access_token || "",
         },
         body: JSON.stringify(payload),
       });

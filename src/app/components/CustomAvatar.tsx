@@ -2,11 +2,13 @@
 import { Avatar } from "@mui/material";
 
 interface AvatarByNameProps {
-  name: string;
+  name?: string;
   size: string;
   fontSize: string;
   ref: any;
   onClick: any;
+  isByName: boolean;
+  src?: string;
 }
 
 function stringToColor(string: string) {
@@ -43,12 +45,14 @@ function stringAvatar(name: string, size: string, fontSize: string) {
   };
 }
 
-export default function AvatarByName({
+export default function CustomAvatar({
   name = "",
   size,
   fontSize,
   ref,
   onClick,
+  isByName,
+  src = "",
 }: AvatarByNameProps) {
   return (
     <div
@@ -56,7 +60,11 @@ export default function AvatarByName({
       ref={ref}
       className="p-[10px] bg-[#212121] rounded-full cursor-pointer"
     >
-      <Avatar {...stringAvatar(name, size, fontSize)} />
+      {isByName ? (
+        <Avatar alt={name} {...stringAvatar(name, size, fontSize)} />
+      ) : (
+        <Avatar alt={name} src={src} />
+      )}
     </div>
   );
 }

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import logo from "@/app/assets/images/logo.png";
 import LoginModal from "./LoginModal";
-import AvatarByName from "./AvatarByName";
+import CustomAvatar from "./CustomAvatar";
 import Popper from "@mui/material/Popper";
 import { useEffect, useRef, useState } from "react";
 import Grow from "@mui/material/Grow";
@@ -12,8 +12,9 @@ import ClickAwayListener from "@mui/material/ClickAwayListener";
 import MenuList from "@mui/material/MenuList";
 import MenuItem from "@mui/material/MenuItem";
 import { signOut } from "next-auth/react";
-import { UserLoginGoogleInfo } from "../interfaces/User";
-
+import Cookies from "js-cookie";
+import { useAppSelector } from "../stores/hooks";
+import { selectUserLoginInfo } from "../stores/auth";
 const menu = [
   {
     name: "account",
@@ -33,11 +34,8 @@ const menu = [
   },
 ];
 
-interface TopNavProps {
-  userLogin: UserLoginGoogleInfo;
-}
-
-export default function TopNav({ userLogin }: TopNavProps) {
+export default function TopNav() {
+  const userLogin = useAppSelector(selectUserLoginInfo);
   const [openMenuUser, setOpenMenuUser] = useState<boolean>(false);
   const anchorRef = useRef<HTMLButtonElement>(null);
 
@@ -52,13 +50,17 @@ export default function TopNav({ userLogin }: TopNavProps) {
     setOpenMenuUser(false);
   };
 
+  const handleLogout = () => {
+    Cookies.remove("access_token");
+    signOut();
+  };
+
   const handleSelectMenu = (
     nameMenu: string,
     event: Event | React.SyntheticEvent
   ) => {
     if (nameMenu === "logout") {
-      localStorage.removeItem("isAuhWithBE");
-      signOut();
+      handleLogout();
     }
     handleClose(event);
   };
@@ -92,17 +94,19 @@ export default function TopNav({ userLogin }: TopNavProps) {
         src={logo}
         alt="Spotify"
       />
-      {!userLogin ? (
+      {!userLogin._id ? (
         <LoginModal></LoginModal>
       ) : (
         <div className="userLoggedIn">
-          <AvatarByName
+          <CustomAvatar
             ref={anchorRef}
+            isByName={!!userLogin.image}
+            src={userLogin.image}
             name={userLogin.name || ""}
             size="30px"
             fontSize="14px"
             onClick={handleToggle}
-          ></AvatarByName>
+          ></CustomAvatar>
           <Popper
             open={openMenuUser}
             anchorEl={anchorRef.current}

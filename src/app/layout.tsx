@@ -6,6 +6,7 @@ import StoreProvider from "./StoreProviders";
 import "./scss/main.scss";
 import { SessionProvider } from "next-auth/react";
 import MainContent from "./MainContent";
+import AuthProvider from "./providers/AuthProvider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -40,7 +41,9 @@ export default function RootLayout({
       >
         <SessionProvider>
           <StoreProvider>
-            <MainContent>{children}</MainContent>
+            <AuthProvider>
+              <MainContent>{children}</MainContent>
+            </AuthProvider>
           </StoreProvider>
         </SessionProvider>
       </body>

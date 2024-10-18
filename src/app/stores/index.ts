@@ -1,10 +1,12 @@
 import { configureStore, Action, ThunkAction } from "@reduxjs/toolkit";
 import playingStore from "./playingStore";
+import authStore from "./auth";
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
-      playing: playingStore
+      playing: playingStore,
+      auth: authStore,
     },
   });
 };
