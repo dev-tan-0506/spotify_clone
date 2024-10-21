@@ -26,7 +26,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="home-main-content">
+    <div className="home-main-content" id="home-main-content">
       <div>
         <ListSingers singers={singers}></ListSingers>
         <AddSingerModal></AddSingerModal>

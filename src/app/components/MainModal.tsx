@@ -22,7 +22,7 @@ export default function MainModal({
 }: MainModalProps) {
   return (
     <Modal
-      className={className}
+      className={"modal " + className}
       id={modalId}
       aria-labelledby="spring-modal-title"
       aria-describedby="spring-modal-description"

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import Link from "next/link";
 import { Singer } from "../interfaces/Singer";
 import { getAverageRGB } from "../utils/commonFunctions";
 
@@ -13,15 +14,14 @@ export default function ListSingers({ singers }: ListSingersProps) {
     const imageEl = e.target.parentElement.querySelector("img");
     if (imageEl) {
       const img = new Image();
-      img.crossOrigin = "Anonymous"; // Hoặc 'use-credentials' nếu cần xác thực
+      img.crossOrigin = "Anonymous";
       img.src = imageEl.src;
       img.onload = function () {
         const color = getAverageRGB(img);
         if (color) {
-          const mainContentEl = document.getElementById("main-content");
+          const mainContentEl = document.getElementById("home-main-content");
           if (mainContentEl) {
             const rgbColor = `rgba(${color.r}, ${color.g}, ${color.b}, 0.4)`;
-            // mainContentEl.style.backgroundColor = `rgba(${color.r}, ${color.g}, ${color.b}, 0.5)`;
             mainContentEl.style.background = `linear-gradient(${rgbColor}, #212121)`;
           }
         }
@@ -29,24 +29,24 @@ export default function ListSingers({ singers }: ListSingersProps) {
     }
   };
   return (
-    <div>
-      <h2 className="font-bold text-[20px] mb-[15px]">Danh sách nghệ sĩ</h2>
-      <ul className="flex gap-[25px]">
+    <div className="list-singers">
+      <h2 className="font-bold text-[20px] mb-[15px] text-white">
+        Danh sách nghệ sĩ
+      </h2>
+      <ul className="flex">
         {singers.map((item) => (
           <li key={item._id}>
-            <div onMouseEnter={handleMouseEnter}>
-              <div className="w-[200px] aspect-[1/1] relative">
-                <img
-                  src={item.avatar}
-                  className="w-full h-full rounded-full mb-[10px] object-cover object-center"
-                  alt={item.name}
-                />
-                <div className="w-[50px] aspect-[1/1] rounded-full bg-[#1DB954] absolute z-[10] bottom-[3%] right-[3%] flex justify-center items-center border border-solid border-[1px] border-[#000]">
-                  <i className="fa-solid fa-play fa-xl ml-[5px] text-[#000]"></i>
+            <div onMouseEnter={handleMouseEnter} className="container">
+              <Link href={`singers/${item._id}`}>
+                <div className="avatar-section">
+                  <img src={item.avatar} className="avatar" alt={item.name} />
+                  <div className="play-action">
+                    <i className="fa-solid fa-play fa-xl"></i>
+                  </div>
                 </div>
-              </div>
-              <div className="font-semibold">{item.name}</div>
-              <div className="text-[#B2B2B2]">Nghệ sĩ</div>
+                <div className="name">{item.name}</div>
+                <div className="role">Nghệ sĩ</div>
+              </Link>
             </div>
           </li>
         ))}

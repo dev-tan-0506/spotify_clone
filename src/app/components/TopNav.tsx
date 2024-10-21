@@ -15,6 +15,7 @@ import { signOut } from "next-auth/react";
 import Cookies from "js-cookie";
 import { useAppSelector } from "../stores/hooks";
 import { selectUserLoginInfo } from "../stores/auth";
+import Link from "next/link";
 const menu = [
   {
     name: "account",
@@ -89,11 +90,13 @@ export default function TopNav() {
 
   return (
     <div className="topNav">
-      <Image
-        style={{ width: "100px", aspectRatio: "7/2" }}
-        src={logo}
-        alt="Spotify"
-      />
+      <Link href="/">
+        <Image
+          style={{ width: "100px", aspectRatio: "7/2" }}
+          src={logo}
+          alt="Spotify"
+        />
+      </Link>
       {!userLogin._id ? (
         <LoginModal></LoginModal>
       ) : (

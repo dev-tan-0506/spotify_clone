@@ -42,7 +42,7 @@ export default function MainContent({ children }: HomeProps) {
           <TopNav></TopNav>
           <div className="main-app">
             <LeftNav></LeftNav>
-            <div className="main-content" id="main-content">{children}</div>
+            <div className="main-content text-white" id="main-content">{children}</div>
             <RightNav></RightNav>
           </div>
           <div className="playbar">

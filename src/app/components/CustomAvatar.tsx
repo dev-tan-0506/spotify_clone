@@ -5,10 +5,10 @@ interface AvatarByNameProps {
   name?: string;
   size: string;
   fontSize: string;
-  ref: any;
   onClick: any;
   isByName: boolean;
   src?: string;
+  ref: any;
 }
 
 function stringToColor(string: string) {
@@ -49,15 +49,14 @@ export default function CustomAvatar({
   name = "",
   size,
   fontSize,
-  ref,
   onClick,
   isByName,
   src = "",
+  ref,
 }: AvatarByNameProps) {
   return (
     <div
       onClick={onClick}
-      ref={ref}
       className="p-[10px] bg-[#212121] rounded-full cursor-pointer"
     >
       {isByName ? (
