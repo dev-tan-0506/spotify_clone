@@ -59,6 +59,7 @@ export const playingStore = createSlice({
     },
     setPlaylist: (state, { payload }: PayloadAction<Song[]>) => {
       state.playlist = payload;
+      state.playlistShuffled = payload;
     },
     setIsShowPlaylistPlayingBar: (
       state,

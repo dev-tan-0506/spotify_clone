@@ -4,6 +4,7 @@
 import Link from "next/link";
 import { Singer } from "../interfaces/Singer";
 import { getAverageRGB } from "../utils/commonFunctions";
+import PlayBtn from "./PlayBtn";
 
 interface ListSingersProps {
   singers: Singer[];
@@ -40,9 +41,7 @@ export default function ListSingers({ singers }: ListSingersProps) {
               <Link href={`singers/${item._id}`}>
                 <div className="avatar-section">
                   <img src={item.avatar} className="avatar" alt={item.name} />
-                  <div className="play-action">
-                    <i className="fa-solid fa-play fa-xl"></i>
-                  </div>
+                  <PlayBtn></PlayBtn>
                 </div>
                 <div className="name">{item.name}</div>
                 <div className="role">Nghệ sĩ</div>

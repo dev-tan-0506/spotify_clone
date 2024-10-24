@@ -1,9 +1,8 @@
 export interface Song {
-    id: number;
+    _id: number;
     name: string;
     singer: string;
-    likedSong: boolean;
     thumb: string;
     link_song: string;
-    durationSong: number;
+    duration: number;
 }

@@ -13,9 +13,9 @@ import {
   selectPlayingState,
   setIsShowPlaylistPlayingBar,
   setIsShowSongPlayingDetailBar,
-  getPlaylist,
 } from "@/app/stores/playingStore";
 import { Song } from "@/app/interfaces/Song";
+import { displayTimeSong } from "@/app/utils/commonFunctions";
 
 export default function PlayBar() {
   const {
@@ -110,17 +110,6 @@ export default function PlayBar() {
     dispatch(toggleShuffle());
   };
 
-  const displayTimeSong = (seconds: number) => {
-    if (!seconds) {
-      return "0:00";
-    }
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${
-      remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds
-    }`;
-  };
-
   const handleEnableSongPlayingDetailBar = () => {
     dispatch(setIsShowSongPlayingDetailBar(!isShowSongPlayingDetailBar));
   };
@@ -130,7 +119,7 @@ export default function PlayBar() {
   };
 
   useEffect(() => {
-    const totalTimeSongPlaying = songPlaying?.durationSong || 0;
+    const totalTimeSongPlaying = songPlaying?.duration || 0;
     if (timePlayingSong === totalTimeSongPlaying) {
       handlePauseSong();
       setTimePlayingSong(0);
@@ -161,10 +150,6 @@ export default function PlayBar() {
       handlePauseSong();
     }
   }, [isPlaying]);
-
-  useEffect(() => {
-    dispatch(getPlaylist());
-  }, [dispatch]);
 
   return (
     <div className="w-full h-full bottom-0 bg-[#000000] px-[19.5px] py-[20px]">
@@ -232,12 +217,12 @@ export default function PlayBar() {
               aria-label="Volume"
               defaultValue={0}
               size="small"
-              max={songPlaying?.durationSong || 0}
+              max={songPlaying?.duration || 0}
               onChange={(_, value) => playSongWithTime(value as number)}
             />
             <div className="text-nowrap">
               {playlist.length
-                ? displayTimeSong(songPlaying?.durationSong)
+                ? displayTimeSong(songPlaying?.duration)
                 : "-:--"}
             </div>
           </div>

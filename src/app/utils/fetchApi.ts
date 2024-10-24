@@ -7,13 +7,14 @@ const BaseUrl = "http://localhost:3002";
 const useAPI = {
   get: async (url: string) => {
     try {
-      const response = await fetch(`${BaseUrl}/${url}`, {
+      const config: any = {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
           authorization: access_token || "",
         },
-      });
+      };
+      const response = await fetch(`${BaseUrl}/${url}`, config);
       if (!response.ok) {
         console.error("Response status: " + response.status);
         return null;

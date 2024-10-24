@@ -103,11 +103,13 @@ form {
 .main-content {
   width: 82%;
   margin: 0 10px;
-  height: 78%;
+  height: 76%;
   flex: 1;
   background: #212121;
   border-radius: 10px;
-  overflow: hidden;
+  overflow: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 .userLoggedIn {
@@ -137,6 +139,13 @@ form {
     z-index: -1;
     padding: 20px;
     border-radius: 15px;
+    .play-action {
+      display: none;
+      position: absolute;
+      z-index: 10;
+      bottom: 3%;
+      right: 3%;
+    }
     &:hover {
       background-color: rgba(31, 31, 31, 0.4);
       .play-action {
@@ -158,25 +167,7 @@ form {
     object-fit: cover;
     object-position: center;
   }
-  .play-action {
-    width: 50px;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background-color: #1db954;
-    position: absolute;
-    z-index: 10;
-    bottom: 3%;
-    right: 3%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid #000;
-    display: none;
-    i {
-      margin-left: 5px;
-      color: #000;
-    }
-  }
+
   .name {
     font-weight: 600;
     color: #fff;
@@ -215,6 +206,118 @@ form {
       bottom: 0;
       left: 0;
       z-index: 10;
+    }
+
+    &-no-cover-image {
+      padding: 30px 20px 20px 20px;
+      display: flex;
+      align-items: center;
+
+      .avatar {
+        width: 180px;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        object-fit: cover;
+        object-position: center;
+      }
+    }
+  }
+
+  .list-action {
+    padding: 20px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+}
+
+.play-action {
+  width: 50px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background-color: #1ed760;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #000;
+  cursor: pointer;
+  &:hover {
+    transform: scale(1.05);
+  }
+  i {
+    margin-left: 5px;
+    color: #000;
+  }
+}
+
+.btn-white {
+  color: #fff;
+  text-transform: capitalize;
+  border-color: #7c7c7c;
+  border-radius: 9999px;
+  font-weight: bold;
+
+  &:hover {
+    border-color: #fff;
+    transform: scale(1.05);
+  }
+}
+
+.list-songs-popular {
+  .song {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 10px;
+    .index {
+      width: 10px;
+      display: flex;
+      justify-content: center;
+    }
+    .index-value {
+      display: block;
+    }
+    .play {
+      display: none;
+    }
+    &:hover {
+      background-color: #2a2a2a;
+
+      .more-options,
+      .add-action {
+        visibility: visible;
+      }
+      .index-value {
+        display: none;
+      }
+      .play {
+        display: block;
+      }
+    }
+
+    .thumb {
+      width: 40px;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: 5px;
+      margin: 0 15px 0 20px;
+    }
+    .name {
+      flex: 1;
+    }
+    .count-views {
+      width: 35%;
+    }
+    .more-options,
+    .add-action {
+      visibility: hidden;
+    }
+    .add-action {
+      margin-right: 20px;
+    }
+    .time {
+      margin: 0 20px;
     }
   }
 }
