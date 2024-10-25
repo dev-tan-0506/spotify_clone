@@ -97,13 +97,13 @@ export default function TopNav() {
           alt="Spotify"
         />
       </Link>
-      {!userLogin._id ? (
+      {!userLogin?._id ? (
         <LoginModal></LoginModal>
       ) : (
         <div className="userLoggedIn">
           <CustomAvatar
             ref={anchorRef}
-            isByName={!!userLogin.image}
+            isByName={!userLogin.image}
             src={userLogin.image}
             name={userLogin.name || ""}
             size="30px"

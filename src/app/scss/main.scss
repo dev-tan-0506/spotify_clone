@@ -1,3 +1,5 @@
+@import "pages/playlist_detail.scss";
+
 .bar {
   background-color: #212121;
   color: #fff;
@@ -319,5 +321,74 @@ form {
     .time {
       margin: 0 20px;
     }
+  }
+}
+
+.left-nav {
+  background-color: #121212;
+  width: 18%;
+  height: 76%;
+  color: #fff;
+  font-size: 14px;
+  padding: 10px 20px 20px 20px;
+  border-radius: 10px;
+  .MuiIconButton-root {
+    span {
+      color: #b3b3b3;
+      font-size: 14px;
+    }
+    &:hover {
+      transform: scale(1.05);
+      .MuiSvgIcon-root,
+      span {
+        color: #fff;
+      }
+    }
+  }
+
+  .MuiSvgIcon-root {
+    color: #b3b3b3;
+  }
+  .header {
+    color: #b3b3b3;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .title {
+      font-size: 17px;
+      cursor: pointer;
+      display: flex;
+      gap: 7px;
+      align-items: center;
+      font-weight: bold;
+      &:hover {
+        color: #fff;
+        .MuiSvgIcon-root {
+          color: #fff;
+        }
+      }
+    }
+  }
+  .list-type {
+    display: flex;
+    gap: 5px;
+    margin-top: 20px;
+    .MuiChip-root {
+      background-color: #2a2a2a;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      &:hover {
+        background-color: #333333;
+      }
+    }
+  }
+}
+
+.MuiIconButton-root {
+  cursor: pointer;
+  &:hover {
+    color: #fff;
   }
 }
