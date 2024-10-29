@@ -1,10 +1,10 @@
 "use client";
 
 import { Chip, IconButton } from "@mui/material";
-import MyPlaylists from "./MyPlaylists";
 import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
 import AddIcon from "@mui/icons-material/Add";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import YourLibrary from "./YourLibrary";
 
 export default function LeftNav() {
   return (
@@ -26,7 +26,7 @@ export default function LeftNav() {
       <div className="list-type">
         <Chip label="Playlists" color="primary" />
       </div>
-      <MyPlaylists></MyPlaylists>
+      <YourLibrary></YourLibrary>
     </div>
   );
 }

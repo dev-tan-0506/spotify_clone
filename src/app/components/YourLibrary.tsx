@@ -4,52 +4,23 @@ import { useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import { IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import { UserLibrary } from "../interfaces/User";
+import { selectUserLoginInfo } from "../stores/auth";
+import { useAppSelector } from "../stores/hooks";
 
-interface SubPlaylist {
-  alias: string;
-  name: string;
-}
-
-interface Playlist extends SubPlaylist {
-  subPlaylists?: SubPlaylist[];
-}
-
-export default function MyPlaylists() {
+export default function YourLibrary() {
   const [playlistSelected, setPlaylistSelected] = useState<string>("");
-  const playlists: Playlist[] = [
-    {
-      alias: "hip-hop",
-      name: "Hip-Hop",
-    },
-    {
-      alias: "pop",
-      name: "Pop",
-    },
-    {
-      alias: "rock",
-      name: "Rock",
-    },
-    {
-      alias: "collaborative",
-      name: "Collaborative",
-    },
-    {
-      alias: "classic",
-      name: "Classic",
-    },
-    {
-      alias: "dance-dance-dance",
-      name: "Dance dance dance",
-    },
-    {
-      alias: "playlists-you-follow",
-      name: "Playlists You Follow",
-    },
-  ];
+  const user = useAppSelector(selectUserLoginInfo);
 
+  const [yourLibrary, setYourLibrary] = useState<UserLibrary[]>({});
   // Event handlers
   const changePlSelected = (plSelected: string) => {
     if (plSelected) setPlaylistSelected(plSelected);
+  };
+
+  const handleGetYourLibrary = async () => {
+    try {
+    } catch (error) {}
   };
   return (
     <div className="mt-[12px] flex flex-col gap-[6px]">
