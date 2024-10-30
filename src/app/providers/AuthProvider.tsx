@@ -4,7 +4,8 @@ import { ReactElement, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { UserLoginGoogleInfo } from "../interfaces/User";
 import { useAppDispatch } from "../stores/hooks";
-import { handleAuthen, setIsAuthencating } from "../stores/auth";
+import { setIsAuthencating } from "../stores/auth";
+import { handleAuthen } from "../stores/asyncThunks/auth";
 
 interface AuthProviderProps {
   children: ReactElement;

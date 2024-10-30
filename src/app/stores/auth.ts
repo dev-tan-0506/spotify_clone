@@ -1,38 +1,9 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from ".";
-import useAPI from "../utils/fetchApi";
-import { AuthenticationInfo, UserLoginGoogleInfo } from "../interfaces/User";
+import { AuthenticationInfo, UserLibrary } from "../interfaces/User";
 import Cookies from "js-cookie";
-
-export interface AuthStore {
-  isAuthencating: boolean;
-  user: UserLoginGoogleInfo;
-}
-
-const authStates: AuthStore = {
-  isAuthencating: true,
-  user: {
-    name: "",
-    email: "",
-    image: "",
-    _id: "",
-  },
-};
-
-export const handleAuthen = createAsyncThunk(
-  "auth/handleAuthen",
-  async (data?: UserLoginGoogleInfo) => {
-    if (!data) {
-      return;
-    }
-    const url = "auth/login-google";
-
-    const response = await useAPI.post(url, data);
-    if (response) {
-      return response;
-    }
-  }
-);
+import { getYourLibrary, handleAuthen } from "./asyncThunks/auth";
+import { authStates } from "./states/auth";
 
 export const authStore = createSlice({
   name: "auth",
@@ -62,12 +33,24 @@ export const authStore = createSlice({
       .addCase(handleAuthen.rejected, (state, { error }) => {
         state.isAuthencating = false;
         console.error(error);
+      })
+      .addCase(
+        getYourLibrary.fulfilled,
+        (state, { payload }: PayloadAction<UserLibrary[] | undefined>) => {
+          if (payload) {
+            state.userLibrary = payload;
+          }
+        }
+      )
+      .addCase(getYourLibrary.rejected, (state, { error }) => {
+        console.error(error);
       });
   },
 });
 
 export const selectIsAuthencating = (state: RootState) => state.auth;
 export const selectUserLoginInfo = (state: RootState) => state.auth.user;
+export const selectUserLibrary = (state: RootState) => state.auth.userLibrary;
 
 export const { setIsAuthencating } = authStore.actions;
 

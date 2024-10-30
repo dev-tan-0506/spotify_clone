@@ -1,16 +1,19 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { Singer } from "@/app/interfaces/Singer";
 import useAPI from "@/app/utils/fetchApi";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import VerifiedRoundedIcon from "@mui/icons-material/VerifiedRounded";
 import { displayTimeSong, getAverageRGB } from "@/app/utils/commonFunctions";
 import PlayBtn from "@/app/components/PlayBtn";
 import { Button } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import { useAppDispatch } from "@/app/stores/hooks";
+import { useAppDispatch, useAppSelector } from "@/app/stores/hooks";
 import { setPlaylist } from "@/app/stores/playingStore";
+import { selectUserLibrary } from "@/app/stores/auth";
+import { getYourLibrary } from "@/app/stores/asyncThunks/auth";
 
 interface SingerDetailPageParams {
   id: string;
@@ -21,7 +24,16 @@ interface SingerDetailPageProps {
 }
 
 export default function SingerDetailPage({ params }: SingerDetailPageProps) {
+  const yourLibrary = useAppSelector(selectUserLibrary);
+
   const [singer, setSinger] = useState<Singer | null>(null);
+  const isFollowing = useMemo(() => {
+    const singersInYLib = yourLibrary.filter((yl) => yl.type === "singers");
+    const findSingerInYLib = singersInYLib.find(
+      (sIYL) => sIYL.item._id === singer?._id
+    );
+    return !!findSingerInYLib;
+  }, [yourLibrary, singer]);
   const dispatch = useAppDispatch();
   const getSingerDetail = async (id: string) => {
     try {
@@ -67,6 +79,22 @@ export default function SingerDetailPage({ params }: SingerDetailPageProps) {
   const handlePlay = () => {
     if (singer?.songs) {
       dispatch(setPlaylist(singer.songs));
+    }
+  };
+
+  const handleFollow = async () => {
+    const urlHandleFollow = `singers/follow/${singer?._id}`;
+    const response = await useAPI.put(urlHandleFollow);
+    if (response) {
+      dispatch(getYourLibrary());
+    }
+  };
+
+  const handleUnfollow = async () => {
+    const urlHandleUnfollow = `singers/unfollow/${singer?._id}`;
+    const response = await useAPI.put(urlHandleUnfollow);
+    if (response) {
+      dispatch(getYourLibrary());
     }
   };
 
@@ -121,9 +149,23 @@ export default function SingerDetailPage({ params }: SingerDetailPageProps) {
       <div className="list-action" id="list-action">
         <PlayBtn size="55px" onClick={handlePlay}></PlayBtn>
         <i className="fa-solid fa-shuffle text-[#B3B3B3] text-[35px] hover:text-[#fff] hover:scale-105 relative cursor-pointer"></i>
-        <Button variant="outlined" className="btn-white">
-          Follow
-        </Button>
+        {isFollowing ? (
+          <Button
+            variant="outlined"
+            className="btn-white"
+            onClick={handleUnfollow}
+          >
+            Following
+          </Button>
+        ) : (
+          <Button
+            variant="outlined"
+            className="btn-white"
+            onClick={handleFollow}
+          >
+            Follow
+          </Button>
+        )}
         <i className="fa-solid fa-ellipsis text-[#B3B3B3] text-[35px] hover:text-[#fff] hover:scale-105 relative cursor-pointer"></i>
       </div>
       <div className="px-[20px]">

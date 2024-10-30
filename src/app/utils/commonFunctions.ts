@@ -56,3 +56,18 @@ export const displayTimeSong = (seconds: number) => {
     remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds
   }`;
 };
+
+export const formatTypeLibrary = (type: string): string => {
+  switch (type) {
+    case "playlists":
+      return "Playlist";
+    case "albums":
+      return "Album";
+    case "singles":
+      return "Single";
+    case "singers":
+      return "Artist";
+    default:
+      return "";
+  }
+};

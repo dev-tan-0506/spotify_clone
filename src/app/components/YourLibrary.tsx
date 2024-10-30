@@ -1,27 +1,25 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useState } from "react";
+import { useEffect } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import { IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { UserLibrary } from "../interfaces/User";
-import { selectUserLoginInfo } from "../stores/auth";
-import { useAppSelector } from "../stores/hooks";
+import { selectUserLibrary } from "../stores/auth";
+import { useAppDispatch, useAppSelector } from "../stores/hooks";
+import { getYourLibrary } from "../stores/asyncThunks/auth";
+import { formatTypeLibrary } from "../utils/commonFunctions";
+import Link from "next/link";
 
 export default function YourLibrary() {
-  const [playlistSelected, setPlaylistSelected] = useState<string>("");
-  const user = useAppSelector(selectUserLoginInfo);
+  const yourLibrary = useAppSelector(selectUserLibrary);
+  const dispatch = useAppDispatch();
 
-  const [yourLibrary, setYourLibrary] = useState<UserLibrary[]>({});
-  // Event handlers
-  const changePlSelected = (plSelected: string) => {
-    if (plSelected) setPlaylistSelected(plSelected);
-  };
+  useEffect(() => {
+    dispatch(getYourLibrary());
+  }, []);
 
-  const handleGetYourLibrary = async () => {
-    try {
-    } catch (error) {}
-  };
   return (
     <div className="mt-[12px] flex flex-col gap-[6px]">
       <div className="flex justify-between">
@@ -37,17 +35,20 @@ export default function YourLibrary() {
         className="flex flex-col gap-[8px] max-h-[200px] overflow-y-scroll"
         style={{ scrollbarWidth: "none" }}
       >
-        {playlists.map((pl) => (
-          <li
-            key={pl.alias}
-            className={`py-[4px] hover:bg-[#262626] rounded-[5px] cursor-pointer ${
-              pl.alias === playlistSelected && "bg-[#262626]"
-            }`}
-            onClick={() => changePlSelected(pl.alias)}
-          >
-            {pl.name}
-          </li>
-        ))}
+        {yourLibrary.length &&
+          yourLibrary.map(({ item, type }) => (
+            <li
+              key={item._id}
+              className={`py-[4px] hover:bg-[#262626] rounded-[5px] cursor-pointer`}
+            >
+              <Link href={`/${type}/${item._id}`}>
+                <span className="font-bold">{item.name}</span> ·{" "}
+                <span className="text-[#b3b3b3]">
+                  {formatTypeLibrary(type)}
+                </span>
+              </Link>
+            </li>
+          ))}
       </ul>
     </div>
   );

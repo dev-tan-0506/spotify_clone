@@ -49,6 +49,29 @@ const useAPI = {
       return null;
     }
   },
+  put: async (url: string, payload?: any) => {
+    try {
+      const response = await fetch(`${BaseUrl}/${url}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: access_token || "",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        console.error("Response status: " + response.status);
+        return null;
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error(`Error: ${error}`);
+      return null;
+    }
+  },
 };
 
 export default useAPI;

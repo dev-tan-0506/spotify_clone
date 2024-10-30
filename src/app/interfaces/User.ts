@@ -1,4 +1,7 @@
+import { Album } from "./Album";
 import { Playlist } from "./Playlist";
+import { Singer } from "./Singer";
+import { Song } from "./Song";
 
 export interface UserLoginGoogleInfo {
   name: string;
@@ -12,6 +15,9 @@ export interface AuthenticationInfo {
   user: UserLoginGoogleInfo;
 }
 
+export type ItemTypeUserLibrary = "playlists" | "singles" | "singers" | "albums";
+
 export interface UserLibrary {
-  playlists: Playlist[];
+  item: Playlist | Song | Singer | Album;
+  type: ItemTypeUserLibrary;
 }
