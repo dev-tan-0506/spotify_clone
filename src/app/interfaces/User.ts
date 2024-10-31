@@ -15,7 +15,11 @@ export interface AuthenticationInfo {
   user: UserLoginGoogleInfo;
 }
 
-export type ItemTypeUserLibrary = "playlists" | "singles" | "singers" | "albums";
+export type ItemTypeUserLibrary =
+  | "playlists"
+  | "singles"
+  | "singers"
+  | "albums";
 
 export interface UserLibrary {
   item: Playlist | Song | Singer | Album;

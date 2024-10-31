@@ -5,15 +5,15 @@ import { Singer } from "@/app/interfaces/Singer";
 import useAPI from "@/app/utils/fetchApi";
 import { useEffect, useMemo, useState } from "react";
 import VerifiedRoundedIcon from "@mui/icons-material/VerifiedRounded";
-import { displayTimeSong, getAverageRGB } from "@/app/utils/commonFunctions";
+import { getAverageRGB } from "@/app/utils/commonFunctions";
 import PlayBtn from "@/app/components/PlayBtn";
 import { Button } from "@mui/material";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { useAppDispatch, useAppSelector } from "@/app/stores/hooks";
 import { setPlaylist } from "@/app/stores/playingStore";
-import { selectUserLibrary } from "@/app/stores/auth";
 import { getYourLibrary } from "@/app/stores/asyncThunks/auth";
+import PopularSection from "./components/PopularSection";
+import { selectUserLibrary } from "@/app/stores/auth";
+import { openToastMessage } from "@/app/stores/toastMessage";
 
 interface SingerDetailPageParams {
   id: string;
@@ -25,7 +25,6 @@ interface SingerDetailPageProps {
 
 export default function SingerDetailPage({ params }: SingerDetailPageProps) {
   const yourLibrary = useAppSelector(selectUserLibrary);
-
   const [singer, setSinger] = useState<Singer | null>(null);
   const isFollowing = useMemo(() => {
     const singersInYLib = yourLibrary.filter((yl) => yl.type === "singers");
@@ -86,6 +85,7 @@ export default function SingerDetailPage({ params }: SingerDetailPageProps) {
     const urlHandleFollow = `singers/follow/${singer?._id}`;
     const response = await useAPI.put(urlHandleFollow);
     if (response) {
+      dispatch(openToastMessage(`Follow ${singer?.name} successfully.`));
       dispatch(getYourLibrary());
     }
   };
@@ -94,6 +94,7 @@ export default function SingerDetailPage({ params }: SingerDetailPageProps) {
     const urlHandleUnfollow = `singers/unfollow/${singer?._id}`;
     const response = await useAPI.put(urlHandleUnfollow);
     if (response) {
+      dispatch(openToastMessage(`Unfollow ${singer?.name} successfully.`));
       dispatch(getYourLibrary());
     }
   };
@@ -168,31 +169,7 @@ export default function SingerDetailPage({ params }: SingerDetailPageProps) {
         )}
         <i className="fa-solid fa-ellipsis text-[#B3B3B3] text-[35px] hover:text-[#fff] hover:scale-105 relative cursor-pointer"></i>
       </div>
-      <div className="px-[20px]">
-        <h2 className="font-bold text-[30px]">Popular</h2>
-        {singer?.songs.length && (
-          <ul className="list-songs-popular">
-            {singer.songs.map((song, index) => (
-              <li className="song" key={song._id}>
-                <div className="index">
-                  <span className="index-value">{index + 1}</span>
-                  <PlayArrowIcon className="play"></PlayArrowIcon>
-                </div>
-                <img className="thumb" src={song.thumb} alt={song.name} />
-                <div className="name">{song.name}</div>
-                <div className="count-views">5,333,333</div>
-                <div className="time">{displayTimeSong(song.duration)}</div>
-                <div className="add-action">
-                  <AddCircleOutlineIcon></AddCircleOutlineIcon>
-                </div>
-                <div className="more-options">
-                  <i className="fa-solid fa-ellipsis"></i>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+      <PopularSection singer={singer}></PopularSection>
     </div>
   );
 }

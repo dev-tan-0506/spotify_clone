@@ -44,7 +44,7 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 1000000;
+    z-index: 99;
   }
 }
 
@@ -391,4 +391,21 @@ form {
   &:hover {
     color: #fff;
   }
+}
+
+.MuiPaper-root {
+  background-color: #282828;
+  color: #fff;
+  .MuiList-root {
+    padding: 5px;
+    .MuiMenuItem-root {
+      padding: 6px 16px 6px 10px;
+      &:hover {
+        background-color: #3e3e3e;
+      }
+    }
+  }
+}
+
+.MuiSnackbarContent-root {
 }

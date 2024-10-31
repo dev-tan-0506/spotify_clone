@@ -4,6 +4,7 @@ import { AuthenticationInfo, UserLibrary } from "../interfaces/User";
 import Cookies from "js-cookie";
 import { getYourLibrary, handleAuthen } from "./asyncThunks/auth";
 import { authStates } from "./states/auth";
+import { Playlist } from "../interfaces/Playlist";
 
 export const authStore = createSlice({
   name: "auth",
@@ -51,6 +52,12 @@ export const authStore = createSlice({
 export const selectIsAuthencating = (state: RootState) => state.auth;
 export const selectUserLoginInfo = (state: RootState) => state.auth.user;
 export const selectUserLibrary = (state: RootState) => state.auth.userLibrary;
+export const selectLikedSongsPl = (state: RootState) => {
+  return state.auth.userLibrary.find(
+    ({ item, type }: UserLibrary) =>
+      type === "playlists" && (item as Playlist).type === "liked"
+  );
+};
 
 export const { setIsAuthencating } = authStore.actions;
 
