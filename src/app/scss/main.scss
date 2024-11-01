@@ -272,6 +272,19 @@ form {
     cursor: pointer;
     padding: 10px 20px;
     border-radius: 10px;
+    &.active {
+      background-color: #6a595e;
+      .more-options,
+      .add-action {
+        visibility: visible;
+      }
+      .play {
+        display: block;
+      }
+      .index-value {
+        display: none;
+      }
+    }
     .index {
       width: 10px;
       display: flex;
@@ -314,6 +327,9 @@ form {
     .more-options,
     .add-action {
       visibility: hidden;
+      &.show {
+        visibility: visible;
+      }
     }
     .add-action {
       margin-right: 20px;

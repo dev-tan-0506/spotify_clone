@@ -52,6 +52,8 @@ export const authStore = createSlice({
 export const selectIsAuthencating = (state: RootState) => state.auth;
 export const selectUserLoginInfo = (state: RootState) => state.auth.user;
 export const selectUserLibrary = (state: RootState) => state.auth.userLibrary;
+export const selectPlaylistsInUserLibrary = (state: RootState) =>
+  state.auth.userLibrary.filter((lib) => lib.type === "playlists");
 export const selectLikedSongsPl = (state: RootState) => {
   return state.auth.userLibrary.find(
     ({ item, type }: UserLibrary) =>

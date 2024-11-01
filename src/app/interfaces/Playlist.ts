@@ -7,7 +7,7 @@ export interface Playlist {
   name: string;
   count_listens: number;
   thumb: string;
-  songs: Song[];
+  songs: Song[] | string[];
   userCreated: string;
   isDeleted: boolean;
   folder: string;
